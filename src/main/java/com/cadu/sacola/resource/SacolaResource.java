@@ -4,9 +4,11 @@ import com.cadu.sacola.model.Item;
 import com.cadu.sacola.model.Sacola;
 import com.cadu.sacola.resource.dto.ItemDto;
 import com.cadu.sacola.service.SacolaService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "/ifood/sacolas")
 @RestController
 @RequestMapping("/ifood/sacolas")
 @RequiredArgsConstructor

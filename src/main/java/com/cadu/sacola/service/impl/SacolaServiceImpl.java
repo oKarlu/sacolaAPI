@@ -59,6 +59,28 @@ public class SacolaServiceImpl implements SacolaService {
                 throw new RuntimeException("Não é possivel adicionar produtos de restaurantes diferentes. feche a sacola ou esvazie.");
             }
         }
+
+        //Calcula o valor da sacola
+        List<Double> valorDosItens = new ArrayList<>();
+        //Percorre todos itens da sacola pegando o valor unitario e multiplicando pela quantidade
+        for(Item itemDaSacola: itensDaSacola){
+            double valorTotalItem = itemDaSacola.getProduto().getValorUnitario() * itemDaSacola.getQuantidade();
+            valorDosItens.add(valorTotalItem);
+        }
+
+        //1 forma - percorre a lista e soma na sacola
+        /*Double valorTotalSacola = 0.0;
+        for(Double valorDeCadaItem : valorDosItens){
+            valorTotalSacola += valorDeCadaItem;
+        }*/
+
+        //2 forma - usando stream para percorrer os itens e somar o valor
+        double valorTotalSacola = valorDosItens.stream()
+                .mapToDouble(valorTotalDeCadaItem -> valorTotalDeCadaItem)
+                .sum();
+
+        //coloca a soma na sacola
+        sacola.setValorTotal(valorTotalSacola);
         //salva a sacola
         sacolaRepository.save(sacola);
         //salva o item que foi adicionado na sacola
@@ -77,6 +99,7 @@ public class SacolaServiceImpl implements SacolaService {
     @Override
     public Sacola fecharSacola(Long id, int numeroFormaPagamento) {
         Sacola sacola = verSacola(id);
+        //Verifica se a sacola está vazia para fechar
         if(sacola.getItens().isEmpty()){
             throw new RuntimeException("Inclua itens na sacola!");
         }
